@@ -1,0 +1,6 @@
+# point下にテレポート先を記述していく
+# name:
+#   world: "ワールド名"
+point:
+  helloworld:
+    world: "world"
