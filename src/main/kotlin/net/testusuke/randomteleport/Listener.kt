@@ -139,6 +139,10 @@ object Listener : Listener {
         if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
             return false
         }
+        loc.add(0.0, -2.0, 0.0)
+        if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
+            return false
+        }
         return true
     }
 
