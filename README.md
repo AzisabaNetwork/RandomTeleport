@@ -23,6 +23,19 @@ point:
 4. close editor  
 Plugin will format it as Teleporter if it way is right.
    
+## Commands
+/randomtp <- show help (base command)  
+/randomtp list <- display list of points
+/randomtp reload <- reload configuration
+## Permissions
+General Permission(it needs to teleport point)
+```
+randomteleport.general
+```
+Admin Permission(it needs to reload configuration and display list of points)
+```
+randomteleport.admin
+```
 ## Developer
 - [testusuke](https://github.com/testusuke)
 ## License
