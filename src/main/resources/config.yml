@@ -1,0 +1,8 @@
+# point下にテレポート先を記述していく
+# name:
+#   world: "ワールド名"
+#   range: <乱数の範囲(絶対値)>
+point:
+  helloworld:
+    world: "world"
+    range: "50000"
