@@ -34,7 +34,10 @@ object Command : CommandExecutor {
                         return false
                     }
                     //  reload
+                    plugin.reloadConfig()
                     configuration.loadConfig()
+                    //  message
+                    sender.sendMessagePrefix("§aコンフィグを再読み込みしました。")
                 }
 
                 "list" -> {
@@ -66,7 +69,7 @@ object Command : CommandExecutor {
             §6/randomtp <- ヘルプの表示
             §6/randomtp reload <- コンフィグのリロード
             §6/randomtp list <- 登録済みテレポート先を表示
-            §d    created by testusuke  
+            §dcreated by testusuke  
             §e========================================
         """.trimIndent()
         this.sendMessage(msg)

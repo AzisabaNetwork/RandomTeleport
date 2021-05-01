@@ -8,7 +8,7 @@ class Main : JavaPlugin() {
         lateinit var plugin: Main
         lateinit var configuration: Configuration
 
-        val prefix = "§e[§eRandom§aTeleport§e]§f"
+        val prefix = "§e[§6Random§aTeleport§e]"
     }
 
     override fun onEnable() {
