@@ -36,6 +36,8 @@ class Configuration {
             val point = Point(name = name, world = world)
             //  insert
             nameLocationMap[it] = point
+            //  logger
+            plugin.logger.info("load point <name:${name} world:${worldName}")
         }
 
         //  logger

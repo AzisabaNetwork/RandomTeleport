@@ -2,6 +2,7 @@ package net.testusuke.randomteleport
 
 import net.testusuke.randomteleport.Main.Companion.configuration
 import net.testusuke.randomteleport.Main.Companion.prefix
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Sign
@@ -22,6 +23,7 @@ object Listener : Listener {
         val player = event.player
         //  block type
         val block = event.clickedBlock ?: return
+
         val state = block.state
         if (state is Sign) {
             //  cast
@@ -85,7 +87,7 @@ object Listener : Listener {
             }
 
             val name = event.getLine(1)
-            if (name == null || configuration.isExistPoint(name)) {
+            if (name == null || !configuration.isExistPoint(name)) {
                 player.sendMessagePrefix("§cそのようなポイントは見つかりませんでした。")
                 return
             }
@@ -110,7 +112,7 @@ object Listener : Listener {
 
     //  check sign for teleport
     private fun Sign.isTeleportSign(): Boolean {
-        return this.getLine(1).equals(prefix)
+        return this.getLine(1) == prefix
     }
 
     //////////////////
@@ -118,13 +120,25 @@ object Listener : Listener {
     //////////////////
     private fun Player.randomTeleport(point: Point) {
         val location = point.world.getRandomLocation()
+        if(location == null){
+            this.sendMessagePrefix("§c安全地域が見つかりませんでした...")
+            return
+        }
         //  teleport
         this.teleport(location)
     }
 
-    private fun World.getRandomLocation(): Location {
+    private fun World.getRandomLocation(): Location? {
+        //  time
+        val start = System.currentTimeMillis()
+        //  generate
         var location = generateRandomLocation(this)
         while (!location.isSafetyLocation()) {
+            //  check time
+            if(start + 50 < System.currentTimeMillis()){
+                return null
+            }
+            //  generate
             location = generateRandomLocation(this)
         }
         return location
@@ -136,6 +150,10 @@ object Listener : Listener {
             return false
         }
         loc.add(0.0, 1.0, 0.0)
+        if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
+            return false
+        }
+        loc.add(0.0, -2.0, 0.0)
         if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
             return false
         }
