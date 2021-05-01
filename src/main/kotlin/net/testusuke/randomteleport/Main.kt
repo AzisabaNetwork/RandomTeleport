@@ -2,9 +2,9 @@ package net.testusuke.randomteleport
 
 import org.bukkit.plugin.java.JavaPlugin
 
-class Main: JavaPlugin() {
+class Main : JavaPlugin() {
 
-    companion object{
+    companion object {
         lateinit var plugin: Main
         lateinit var configuration: Configuration
 

@@ -14,23 +14,23 @@ import org.bukkit.event.player.PlayerInteractEvent
 import java.util.*
 import org.bukkit.World
 
-object Listener: Listener {
+object Listener : Listener {
 
     //  onClick
     @EventHandler
-    fun onBlockClick(event: PlayerInteractEvent){
+    fun onBlockClick(event: PlayerInteractEvent) {
         val player = event.player
         //  block type
         val block = event.clickedBlock ?: return
         val state = block.state
-        if(state is Sign){
+        if (state is Sign) {
             //  cast
             val sign = state
             //  check
             if (!sign.isTeleportSign()) return
 
             //  Permission
-            if (!player.hasPermission(Permission.GENERAL)){
+            if (!player.hasPermission(Permission.GENERAL)) {
                 player.sendPermissionError()
                 return
             }
@@ -38,7 +38,7 @@ object Listener: Listener {
             //  get point
             val name = sign.getLine(2)
             //  isExist
-            if (!configuration.isExistPoint(name)){
+            if (!configuration.isExistPoint(name)) {
                 player.sendMessagePrefix("§cテレポート先が見つかりませんでした...")
                 return
             }
@@ -52,18 +52,18 @@ object Listener: Listener {
 
     //  onBlockBreak
     @EventHandler
-    fun onBlockBreak(event: BlockBreakEvent){
+    fun onBlockBreak(event: BlockBreakEvent) {
         val player = event.player
         val state = event.block.state
         //  block
-        if(state is Sign){
+        if (state is Sign) {
             //  is tp's sign
             val sign = state
             //  check
             if (!sign.isTeleportSign()) return
 
             //  Permission
-            if(!player.hasPermission(Permission.ADMIN)){
+            if (!player.hasPermission(Permission.ADMIN)) {
                 player.sendPermissionError()
                 event.isCancelled = true
                 return
@@ -75,35 +75,36 @@ object Listener: Listener {
 
     //  onSign
     @EventHandler
-    fun onSign(event: SignChangeEvent){
+    fun onSign(event: SignChangeEvent) {
         val player = event.player
         //  is sign for random tp
-        if (event.getLine(0).equals("[RandomTP]")){
+        if (event.getLine(0).equals("[RandomTP]")) {
             //  permission
-            if(!player.hasPermission(Permission.ADMIN)){
+            if (!player.hasPermission(Permission.ADMIN)) {
                 player.sendPermissionError()
             }
 
             val name = event.getLine(1)
-            if(name == null || configuration.isExistPoint(name)){
+            if (name == null || configuration.isExistPoint(name)) {
                 player.sendMessagePrefix("§cそのようなポイントは見つかりませんでした。")
                 return
             }
 
-            event.setLine(0,"§e===============")
+            event.setLine(0, "§e===============")
             event.setLine(1, prefix)
             event.setLine(2, name)
-            event.setLine(3,"§e===============")
+            event.setLine(3, "§e===============")
             //  message
             player.sendMessagePrefix("§aテレポーターを作成しました。")
         }
     }
 
     //  Utils
-    private fun Player.sendPermissionError(){
+    private fun Player.sendPermissionError() {
         this.sendMessage("${Main.prefix}§cあなたに権限はありません")
     }
-    private fun Player.sendMessagePrefix(message: String){
+
+    private fun Player.sendMessagePrefix(message: String) {
         this.sendMessage("${prefix}${message}")
     }
 
@@ -115,18 +116,18 @@ object Listener: Listener {
     //////////////////
     //  Teleport    //
     //////////////////
-    private fun Player.randomTeleport(point: Point){
+    private fun Player.randomTeleport(point: Point) {
         val location = point.world.getRandomLocation()
         //  teleport
         this.teleport(location)
     }
 
-    private fun World.getRandomLocation():Location {
+    private fun World.getRandomLocation(): Location {
         var location = generateRandomLocation(this)
-        while (!location.isSafetyLocation()){
+        while (!location.isSafetyLocation()) {
             location = generateRandomLocation(this)
         }
-        return  location
+        return location
     }
 
     private fun Location.isSafetyLocation(): Boolean {
@@ -146,7 +147,7 @@ object Listener: Listener {
         val rand = Random()
         val x = rand.nextInt(size.toInt()) - (size.toInt() / 2)
         val z = rand.nextInt(size.toInt()) - (size.toInt() / 2)
-        val y = world.getHighestBlockYAt(x,z) + 1
+        val y = world.getHighestBlockYAt(x, z) + 1
         return Location(world, x.toDouble(), y.toDouble(), z.toDouble())
     }
 

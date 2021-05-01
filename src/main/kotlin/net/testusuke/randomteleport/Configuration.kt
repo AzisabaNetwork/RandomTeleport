@@ -15,7 +15,7 @@ class Configuration {
         this.loadConfig()
     }
 
-    fun loadConfig(){
+    fun loadConfig() {
         //  init
         nameLocationMap.clear()
 
@@ -28,7 +28,7 @@ class Configuration {
             return
         }
         //  load
-        section.getKeys(false).forEach{
+        section.getKeys(false).forEach {
             val name = it
             val worldName = config.getString("point.${it}.world") ?: return@forEach
             val world = plugin.server.getWorld(worldName) ?: return@forEach

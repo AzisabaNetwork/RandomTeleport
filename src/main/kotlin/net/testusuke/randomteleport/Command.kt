@@ -8,28 +8,28 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object Command: CommandExecutor {
+object Command : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if(sender !is Player) return false
+        if (sender !is Player) return false
         //  permission
-        if(!sender.hasPermission(Permission.GENERAL)){
+        if (!sender.hasPermission(Permission.GENERAL)) {
             sender.sendPermissionError()
             return false
         }
 
         //  /randomtp
-        if(args.isEmpty()){
+        if (args.isEmpty()) {
             //  sendHelp
             sender.sendHelp()
             return true
         }
 
         //  /randomtp <...>
-        if(args.isNotEmpty()){
-            when(args[0]){
+        if (args.isNotEmpty()) {
+            when (args[0]) {
                 "reload" -> {
-                    if(!sender.hasPermission(Permission.ADMIN)) {
+                    if (!sender.hasPermission(Permission.ADMIN)) {
                         sender.sendPermissionError()
                         return false
                     }
@@ -38,17 +38,19 @@ object Command: CommandExecutor {
                 }
 
                 "list" -> {
-                    if(!sender.hasPermission(Permission.ADMIN)){
+                    if (!sender.hasPermission(Permission.ADMIN)) {
                         sender.sendPermissionError()
                         return false
                     }
 
-                    sender.sendMessage("""
+                    sender.sendMessage(
+                        """
                         §e========================================
                         §d登録済みテレポート先
-                    """.trimIndent())
+                    """.trimIndent()
+                    )
                     val list = configuration.listOfPoint()
-                    list.forEach{
+                    list.forEach {
                         sender.sendMessage("${it.name} -> ${it.world.name}")
                     }
                     sender.sendMessage("§e========================================")
@@ -58,7 +60,7 @@ object Command: CommandExecutor {
         return false
     }
 
-    private fun Player.sendHelp(){
+    private fun Player.sendHelp() {
         val msg = """
             §e========================================
             §6/randomtp <- ヘルプの表示
@@ -70,11 +72,11 @@ object Command: CommandExecutor {
         this.sendMessage(msg)
     }
 
-    private fun Player.sendPermissionError(){
+    private fun Player.sendPermissionError() {
         this.sendMessage("${prefix}§cあなたに権限はありません")
     }
 
-    private fun Player.sendMessagePrefix(message: String){
+    private fun Player.sendMessagePrefix(message: String) {
         this.sendMessage("${prefix}${message}")
     }
 }
