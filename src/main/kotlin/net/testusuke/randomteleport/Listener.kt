@@ -118,7 +118,7 @@ object Listener : Listener {
     //////////////////
     //  Teleport    //
     //////////////////
-    private fun Player.randomTeleport(point: Point) {
+    fun Player.randomTeleport(point: Point) {
         val location = point.world.getRandomLocation()
         if(location == null){
             this.sendMessagePrefix("§c安全地域が見つかりませんでした...")

@@ -1,6 +1,6 @@
 name: RandomTeleport
 main: net.testusuke.randomteleport.Main
-version: 1.0.0
+version: 1.1.0
 author: testusuke
 commands:
   randomtp:
