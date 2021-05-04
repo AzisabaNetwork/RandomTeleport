@@ -1,6 +1,7 @@
 package net.testusuke.randomteleport
 
 import net.testusuke.randomteleport.Main.Companion.configuration
+import net.testusuke.randomteleport.Main.Companion.plugin
 import net.testusuke.randomteleport.Main.Companion.prefix
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -119,13 +120,19 @@ object Listener : Listener {
     //  Teleport    //
     //////////////////
     fun Player.randomTeleport(point: Point) {
-        val location = point.world.getRandomLocation()
-        if(location == null){
-            this.sendMessagePrefix("§c安全地域が見つかりませんでした...")
-            return
-        }
-        //  teleport
-        this.teleport(location)
+        plugin.randomGenerateThread.execute( Runnable {
+            val location = point.world.getRandomLocation()
+            if (location == null) {
+                this.sendMessagePrefix("§c安全地域が見つかりませんでした...")
+                return@Runnable
+            }
+            //  teleport
+            this.sendMessagePrefix("§a安全地域を見つけました!")
+            //  main thread
+            Bukkit.getServer().scheduler.runTask(plugin, Runnable {
+                this.teleport(location)
+            })
+        })
     }
 
     private fun World.getRandomLocation(): Location? {
@@ -135,7 +142,7 @@ object Listener : Listener {
         var location = generateRandomLocation(this)
         while (!location.isSafetyLocation()) {
             //  check time
-            if(start + 50 < System.currentTimeMillis()){
+            if(start + 3000 < System.currentTimeMillis()){
                 return null
             }
             //  generate
@@ -153,10 +160,7 @@ object Listener : Listener {
         if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
             return false
         }
-        loc.add(0.0, -2.0, 0.0)
-        if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
-            return false
-        }
+
         return true
     }
 

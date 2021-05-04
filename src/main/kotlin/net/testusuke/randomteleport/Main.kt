@@ -1,6 +1,8 @@
 package net.testusuke.randomteleport
 
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class Main : JavaPlugin() {
 
@@ -11,9 +13,14 @@ class Main : JavaPlugin() {
         val prefix = "§e[§6Random§aTeleport§e]"
     }
 
+    lateinit var randomGenerateThread : ExecutorService
+
     override fun onEnable() {
         //  instance
         plugin = this
+
+        //  prepare thread pool
+        randomGenerateThread = Executors.newFixedThreadPool(10)
 
         //  Listener
         server.pluginManager.registerEvents(Listener, this)
@@ -27,6 +34,9 @@ class Main : JavaPlugin() {
     }
 
     override fun onDisable() {
+
+        //  kill thread pool
+        randomGenerateThread.shutdown()
 
     }
 }
