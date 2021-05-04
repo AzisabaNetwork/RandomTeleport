@@ -1,5 +1,6 @@
 package net.testusuke.randomteleport
 
+import net.testusuke.randomteleport.Listener.randomTeleport
 import net.testusuke.randomteleport.Main.Companion.configuration
 import net.testusuke.randomteleport.Main.Companion.plugin
 import net.testusuke.randomteleport.Main.Companion.prefix
@@ -20,14 +21,31 @@ object Command : CommandExecutor {
 
         //  /randomtp
         if (args.isEmpty()) {
-            //  sendHelp
-            sender.sendHelp()
-            return true
+            //  get world
+            val world = sender.world
+            val worldName = world.name
+            //  does world include points
+            for (point in configuration.listOfPoint()) {
+                if(point.world.name == worldName){
+                    sender.sendMessagePrefix("§aテレポートします...")
+                    sender.randomTeleport(point)
+                    return true
+                }
+            }
+
+            sender.sendMessagePrefix("§cこのワールドでは許可されていません。")
+            return false
         }
 
         //  /randomtp <...>
         if (args.isNotEmpty()) {
             when (args[0]) {
+                "help" -> {
+                    //  sendHelp
+                    sender.sendHelp()
+                    return true
+                }
+
                 "reload" -> {
                     if (!sender.hasPermission(Permission.ADMIN)) {
                         sender.sendPermissionError()
