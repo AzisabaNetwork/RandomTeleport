@@ -3,7 +3,6 @@ package net.testusuke.randomteleport
 import net.testusuke.randomteleport.Main.Companion.configuration
 import net.testusuke.randomteleport.Main.Companion.plugin
 import net.testusuke.randomteleport.Main.Companion.prefix
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.block.Block
@@ -89,22 +88,17 @@ object Listener : Listener {
     }
 
     fun Player.randomTeleport(point: Point) {
-        plugin.randomGenerateThread.execute(
-            Runnable {
-                val location = point.world.getRandomLocation()
-                if (location == null) {
-                    sendMessagePrefix("§c安全地域が見つかりませんでした...")
-                    return@Runnable
-                }
-                sendMessagePrefix("§a安全地域を見つけました!")
-                Bukkit.getServer().scheduler.runTask(
-                    plugin,
-                    Runnable {
-                        teleport(location)
-                    }
-                )
+        plugin.randomGenerateThread.execute {
+            val location = point.world.getRandomLocation()
+            if (location == null) {
+                sendMessagePrefix("§c安全地域が見つかりませんでした...")
+                return@execute
             }
-        )
+            sendMessagePrefix("§a安全地域を見つけました!")
+            plugin.runTaskSync {
+                teleport(location)
+            }
+        }
     }
 
     private fun World.getRandomLocation(): Location? {
