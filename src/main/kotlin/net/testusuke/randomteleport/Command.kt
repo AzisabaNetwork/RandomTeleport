@@ -23,16 +23,15 @@ object Command : CommandExecutor {
                 val world = sender.world
                 val worldName = world.name
                 //  get point of sender's world
-                for (point in configuration.points.values) {
-                    if (point.world.name == worldName) {
-                        sender.sendMessagePrefix("§aテレポートします...")
-                        sender.randomTeleport(point)
-                        return true
-                    }
+                val point = configuration.points.values.firstOrNull { it.world.name == worldName }
+                return if (point != null) {
+                    sender.sendMessagePrefix("§aテレポートします...")
+                    sender.randomTeleport(point)
+                    true
+                } else {
+                    sender.sendMessagePrefix("§cこのワールドでは許可されていません。")
+                    false
                 }
-
-                sender.sendMessagePrefix("§cこのワールドでは許可されていません。")
-                return false
             }
             "help" -> {
                 sender.sendHelp()
