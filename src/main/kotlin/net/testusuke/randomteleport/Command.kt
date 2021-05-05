@@ -70,19 +70,20 @@ object Command : CommandExecutor {
     }
 
     private fun Player.sendHelp() {
-        val msg = """
+        sendMessage(
+            """
             §e========================================
             §6/randomtp <- ヘルプの表示
             §6/randomtp reload <- コンフィグのリロード
             §6/randomtp list <- 登録済みテレポート先を表示
             §dcreated by testusuke  
             §e========================================
-        """.trimIndent()
-        sendMessage(msg)
+            """.trimIndent()
+        )
     }
 
     private fun Player.sendPermissionError() {
-        sendMessage("$prefix§cあなたに権限はありません")
+        sendMessagePrefix("§cあなたに権限はありません")
     }
 
     private fun Player.sendMessagePrefix(message: String) {
