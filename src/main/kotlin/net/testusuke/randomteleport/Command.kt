@@ -19,62 +19,57 @@ object Command : CommandExecutor {
             return false
         }
 
-        //  /randomtp
-        if (args.isEmpty()) {
-            //  get world
-            val world = sender.world
-            val worldName = world.name
-            //  does world include points
-            for (point in configuration.points.values) {
-                if (point.world.name == worldName) {
-                    sender.sendMessagePrefix("§aテレポートします...")
-                    sender.randomTeleport(point)
-                    return true
+        when (args.getOrNull(0)) {
+            null -> {
+                //  get world
+                val world = sender.world
+                val worldName = world.name
+                //  does world include points
+                for (point in configuration.points.values) {
+                    if (point.world.name == worldName) {
+                        sender.sendMessagePrefix("§aテレポートします...")
+                        sender.randomTeleport(point)
+                        return true
+                    }
                 }
+
+                sender.sendMessagePrefix("§cこのワールドでは許可されていません。")
+                return false
+            }
+            "help" -> {
+                //  sendHelp
+                sender.sendHelp()
+                return true
             }
 
-            sender.sendMessagePrefix("§cこのワールドでは許可されていません。")
-            return false
-        }
+            "reload" -> {
+                if (!sender.hasPermission(Permission.ADMIN)) {
+                    sender.sendPermissionError()
+                    return false
+                }
+                //  reload
+                plugin.reloadConfig()
+                configuration.loadConfig()
+                //  message
+                sender.sendMessagePrefix("§aコンフィグを再読み込みしました。")
+            }
 
-        //  /randomtp <...>
-        if (args.isNotEmpty()) {
-            when (args[0]) {
-                "help" -> {
-                    //  sendHelp
-                    sender.sendHelp()
-                    return true
+            "list" -> {
+                if (!sender.hasPermission(Permission.ADMIN)) {
+                    sender.sendPermissionError()
+                    return false
                 }
 
-                "reload" -> {
-                    if (!sender.hasPermission(Permission.ADMIN)) {
-                        sender.sendPermissionError()
-                        return false
-                    }
-                    //  reload
-                    plugin.reloadConfig()
-                    configuration.loadConfig()
-                    //  message
-                    sender.sendMessagePrefix("§aコンフィグを再読み込みしました。")
+                sender.sendMessage(
+                    """
+                    §e========================================
+                    §d登録済みテレポート先
+                    """.trimIndent()
+                )
+                configuration.points.forEach { (name, point) ->
+                    sender.sendMessage("$name -> ${point.world.name}")
                 }
-
-                "list" -> {
-                    if (!sender.hasPermission(Permission.ADMIN)) {
-                        sender.sendPermissionError()
-                        return false
-                    }
-
-                    sender.sendMessage(
-                        """
-                        §e========================================
-                        §d登録済みテレポート先
-                        """.trimIndent()
-                    )
-                    configuration.points.forEach { (name, point) ->
-                        sender.sendMessage("$name -> ${point.world.name}")
-                    }
-                    sender.sendMessage("§e========================================")
-                }
+                sender.sendMessage("§e========================================")
             }
         }
         return false
