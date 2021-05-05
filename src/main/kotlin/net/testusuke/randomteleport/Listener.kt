@@ -22,9 +22,8 @@ object Listener : Listener {
     fun onBlockClick(event: PlayerInteractEvent) {
         val player = event.player
         val block = event.clickedBlock ?: return
-        val state = block.state
-        if (state is Sign) {
-            val sign = state
+        val sign = block.state
+        if (sign is Sign) {
             if (!sign.isTeleportSign()) return
             if (!player.hasPermission(Permission.GENERAL)) {
                 player.sendPermissionError()
@@ -44,9 +43,8 @@ object Listener : Listener {
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         val player = event.player
-        val state = event.block.state
-        if (state is Sign) {
-            val sign = state
+        val sign = event.block.state
+        if (sign is Sign) {
             if (!sign.isTeleportSign()) return
             if (!player.hasPermission(Permission.ADMIN)) {
                 player.sendPermissionError()
