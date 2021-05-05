@@ -10,7 +10,7 @@ class Main : JavaPlugin() {
         lateinit var plugin: Main
         lateinit var configuration: Configuration
 
-        val prefix = "§e[§6Random§aTeleport§e]"
+        const val prefix = "§e[§6Random§aTeleport§e]"
     }
 
     lateinit var randomGenerateThread: ExecutorService
