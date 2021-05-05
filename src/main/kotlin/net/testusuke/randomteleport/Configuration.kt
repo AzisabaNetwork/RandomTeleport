@@ -21,13 +21,12 @@ class Configuration {
             plugin.logger.warning("${ChatColor.RED}failed to load configuration!")
             return
         }
-        section.getKeys(false).forEach {
-            val name = it
-            val worldName = config.getString("point.$it.world") ?: return@forEach
+        section.getKeys(false).forEach { name ->
+            val worldName = config.getString("point.$name.world") ?: return@forEach
             val world = plugin.server.getWorld(worldName) ?: return@forEach
 
             val point = Point(name = name, world = world)
-            _points[it] = point
+            _points[name] = point
             plugin.logger.info("load point <name:$name world:$worldName")
         }
 
