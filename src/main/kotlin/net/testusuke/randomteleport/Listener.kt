@@ -6,6 +6,7 @@ import net.testusuke.randomteleport.Main.Companion.prefix
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.World
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -13,8 +14,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.SignChangeEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import java.util.*
-import org.bukkit.World
+import java.util.Random
 
 object Listener : Listener {
 
@@ -108,7 +108,7 @@ object Listener : Listener {
     }
 
     private fun Player.sendMessagePrefix(message: String) {
-        this.sendMessage("${prefix}${message}")
+        this.sendMessage("${prefix}$message")
     }
 
     //  check sign for teleport
@@ -116,23 +116,28 @@ object Listener : Listener {
         return this.getLine(1) == prefix
     }
 
-    //////////////////
+    // ////////////////
     //  Teleport    //
-    //////////////////
+    // ////////////////
     fun Player.randomTeleport(point: Point) {
-        plugin.randomGenerateThread.execute( Runnable {
-            val location = point.world.getRandomLocation()
-            if (location == null) {
-                this.sendMessagePrefix("§c安全地域が見つかりませんでした...")
-                return@Runnable
+        plugin.randomGenerateThread.execute(
+            Runnable {
+                val location = point.world.getRandomLocation()
+                if (location == null) {
+                    this.sendMessagePrefix("§c安全地域が見つかりませんでした...")
+                    return@Runnable
+                }
+                //  teleport
+                this.sendMessagePrefix("§a安全地域を見つけました!")
+                //  main thread
+                Bukkit.getServer().scheduler.runTask(
+                    plugin,
+                    Runnable {
+                        this.teleport(location)
+                    }
+                )
             }
-            //  teleport
-            this.sendMessagePrefix("§a安全地域を見つけました!")
-            //  main thread
-            Bukkit.getServer().scheduler.runTask(plugin, Runnable {
-                this.teleport(location)
-            })
-        })
+        )
     }
 
     private fun World.getRandomLocation(): Location? {
@@ -142,7 +147,7 @@ object Listener : Listener {
         var location = generateRandomLocation(this)
         while (!location.isSafetyLocation()) {
             //  check time
-            if(start + 3000 < System.currentTimeMillis()){
+            if (start + 3000 < System.currentTimeMillis()) {
                 return null
             }
             //  generate
@@ -176,5 +181,4 @@ object Listener : Listener {
         val y = world.getHighestBlockYAt(x, z) + 1
         return Location(world, x.toDouble(), y.toDouble(), z.toDouble())
     }
-
 }

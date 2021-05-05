@@ -26,7 +26,7 @@ object Command : CommandExecutor {
             val worldName = world.name
             //  does world include points
             for (point in configuration.listOfPoint()) {
-                if(point.world.name == worldName){
+                if (point.world.name == worldName) {
                     sender.sendMessagePrefix("§aテレポートします...")
                     sender.randomTeleport(point)
                     return true
@@ -68,7 +68,7 @@ object Command : CommandExecutor {
                         """
                         §e========================================
                         §d登録済みテレポート先
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                     val list = configuration.listOfPoint()
                     list.forEach {
@@ -94,10 +94,10 @@ object Command : CommandExecutor {
     }
 
     private fun Player.sendPermissionError() {
-        this.sendMessage("${prefix}§cあなたに権限はありません")
+        this.sendMessage("$prefix§cあなたに権限はありません")
     }
 
     private fun Player.sendMessagePrefix(message: String) {
-        this.sendMessage("${prefix}${message}")
+        this.sendMessage("${prefix}$message")
     }
 }

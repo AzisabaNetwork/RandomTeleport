@@ -13,7 +13,7 @@ class Main : JavaPlugin() {
         val prefix = "§e[§6Random§aTeleport§e]"
     }
 
-    lateinit var randomGenerateThread : ExecutorService
+    lateinit var randomGenerateThread: ExecutorService
 
     override fun onEnable() {
         //  instance
@@ -30,13 +30,11 @@ class Main : JavaPlugin() {
         saveDefaultConfig()
         //  load config
         configuration = Configuration()
-
     }
 
     override fun onDisable() {
 
         //  kill thread pool
         randomGenerateThread.shutdown()
-
     }
 }

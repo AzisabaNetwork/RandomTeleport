@@ -2,7 +2,6 @@ package net.testusuke.randomteleport
 
 import net.testusuke.randomteleport.Main.Companion.plugin
 import org.bukkit.ChatColor
-import java.security.cert.PolicyNode
 
 class Configuration {
 
@@ -30,14 +29,14 @@ class Configuration {
         //  load
         section.getKeys(false).forEach {
             val name = it
-            val worldName = config.getString("point.${it}.world") ?: return@forEach
+            val worldName = config.getString("point.$it.world") ?: return@forEach
             val world = plugin.server.getWorld(worldName) ?: return@forEach
 
             val point = Point(name = name, world = world)
             //  insert
             nameLocationMap[it] = point
             //  logger
-            plugin.logger.info("load point <name:${name} world:${worldName}")
+            plugin.logger.info("load point <name:$name world:$worldName")
         }
 
         //  logger
