@@ -77,15 +77,15 @@ object Listener : Listener {
     }
 
     private fun Player.sendPermissionError() {
-        this.sendMessage("${Main.prefix}§cあなたに権限はありません")
+        sendMessage("$prefix§cあなたに権限はありません")
     }
 
     private fun Player.sendMessagePrefix(message: String) {
-        this.sendMessage("${prefix}$message")
+        sendMessage("$prefix$message")
     }
 
     private fun Sign.isTeleportSign(): Boolean {
-        return this.getLine(1) == prefix
+        return getLine(1) == prefix
     }
 
     fun Player.randomTeleport(point: Point) {
@@ -93,14 +93,14 @@ object Listener : Listener {
             Runnable {
                 val location = point.world.getRandomLocation()
                 if (location == null) {
-                    this.sendMessagePrefix("§c安全地域が見つかりませんでした...")
+                    sendMessagePrefix("§c安全地域が見つかりませんでした...")
                     return@Runnable
                 }
-                this.sendMessagePrefix("§a安全地域を見つけました!")
+                sendMessagePrefix("§a安全地域を見つけました!")
                 Bukkit.getServer().scheduler.runTask(
                     plugin,
                     Runnable {
-                        this.teleport(location)
+                        teleport(location)
                     }
                 )
             }
@@ -120,7 +120,7 @@ object Listener : Listener {
     }
 
     private fun Location.isSafetyLocation(): Boolean {
-        val loc = this.clone()
+        val loc = clone()
         if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
             return false
         }

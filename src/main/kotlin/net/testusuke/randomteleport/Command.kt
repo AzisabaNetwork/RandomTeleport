@@ -78,14 +78,14 @@ object Command : CommandExecutor {
             §dcreated by testusuke  
             §e========================================
         """.trimIndent()
-        this.sendMessage(msg)
+        sendMessage(msg)
     }
 
     private fun Player.sendPermissionError() {
-        this.sendMessage("$prefix§cあなたに権限はありません")
+        sendMessage("$prefix§cあなたに権限はありません")
     }
 
     private fun Player.sendMessagePrefix(message: String) {
-        this.sendMessage("${prefix}$message")
+        sendMessage("${prefix}$message")
     }
 }

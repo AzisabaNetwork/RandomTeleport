@@ -9,7 +9,7 @@ class Configuration {
 
     init {
         plugin.logger.info("loading configuration...")
-        this.loadConfig()
+        loadConfig()
     }
 
     fun loadConfig() {
