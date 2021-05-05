@@ -5,7 +5,7 @@ import org.bukkit.ChatColor
 
 class Configuration {
 
-    private val nameLocationMap = mutableMapOf<String, Point>()
+    private val _points = mutableMapOf<String, Point>()
 
     init {
         //  logger
@@ -16,7 +16,7 @@ class Configuration {
 
     fun loadConfig() {
         //  init
-        nameLocationMap.clear()
+        _points.clear()
 
         //  get config
         val config = plugin.config
@@ -34,7 +34,7 @@ class Configuration {
 
             val point = Point(name = name, world = world)
             //  insert
-            nameLocationMap[it] = point
+            _points[it] = point
             //  logger
             plugin.logger.info("load point <name:$name world:$worldName")
         }
@@ -43,15 +43,14 @@ class Configuration {
         plugin.logger.info("loaded configuration")
     }
 
-    fun listOfPoint(): MutableCollection<Point> {
-        return nameLocationMap.values
-    }
+    val points: Map<String, Point>
+        get() = _points.toMap()
 
     fun isExistPoint(name: String): Boolean {
-        return nameLocationMap.contains(name)
+        return _points.contains(name)
     }
 
     fun getPoint(name: String): Point? {
-        return nameLocationMap[name]
+        return _points[name]
     }
 }

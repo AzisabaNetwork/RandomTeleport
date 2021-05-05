@@ -25,7 +25,7 @@ object Command : CommandExecutor {
             val world = sender.world
             val worldName = world.name
             //  does world include points
-            for (point in configuration.listOfPoint()) {
+            for (point in configuration.points.values) {
                 if (point.world.name == worldName) {
                     sender.sendMessagePrefix("§aテレポートします...")
                     sender.randomTeleport(point)
@@ -70,9 +70,8 @@ object Command : CommandExecutor {
                         §d登録済みテレポート先
                         """.trimIndent()
                     )
-                    val list = configuration.listOfPoint()
-                    list.forEach {
-                        sender.sendMessage("${it.name} -> ${it.world.name}")
+                    configuration.points.forEach { (name, point) ->
+                        sender.sendMessage("$name -> ${point.world.name}")
                     }
                     sender.sendMessage("§e========================================")
                 }
