@@ -5,8 +5,8 @@ import net.testusuke.randomteleport.Main.Companion.plugin
 import net.testusuke.randomteleport.Main.Companion.prefix
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.World
+import org.bukkit.block.Block
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -120,19 +120,11 @@ object Listener : Listener {
     }
 
     private fun Location.isSafetyLocation(): Boolean {
-        val loc = clone()
-        if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
-            return false
-        }
-        loc.add(0.0, 1.0, 0.0)
-        if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
-            return false
-        }
-        loc.add(0.0, -2.0, 0.0)
-        if (loc.block.type.isOccluding || listOf(Material.LAVA, Material.WATER).contains(loc.block.type)) {
-            return false
-        }
+        fun Block.isUnSafety() = type.isOccluding || isLiquid
 
+        if (block.isUnSafety()) return false
+        if (block.getRelative(0, 1, 0).isUnSafety()) return false
+        if (block.getRelative(0, -2, 0).isUnSafety()) return false
         return true
     }
 
