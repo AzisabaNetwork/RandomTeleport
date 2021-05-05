@@ -13,7 +13,6 @@ object Command : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) return false
-        //  permission
         if (!sender.hasPermission(Permission.GENERAL)) {
             sender.sendPermissionError()
             return false
@@ -21,10 +20,9 @@ object Command : CommandExecutor {
 
         when (args.getOrNull(0)) {
             null -> {
-                //  get world
                 val world = sender.world
                 val worldName = world.name
-                //  does world include points
+                //  get point of sender's world
                 for (point in configuration.points.values) {
                     if (point.world.name == worldName) {
                         sender.sendMessagePrefix("§aテレポートします...")
@@ -37,7 +35,6 @@ object Command : CommandExecutor {
                 return false
             }
             "help" -> {
-                //  sendHelp
                 sender.sendHelp()
                 return true
             }
@@ -47,10 +44,8 @@ object Command : CommandExecutor {
                     sender.sendPermissionError()
                     return false
                 }
-                //  reload
                 plugin.reloadConfig()
                 configuration.loadConfig()
-                //  message
                 sender.sendMessagePrefix("§aコンフィグを再読み込みしました。")
             }
 
