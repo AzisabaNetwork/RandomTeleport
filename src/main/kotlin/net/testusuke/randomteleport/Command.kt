@@ -13,91 +13,80 @@ object Command : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) return false
-        //  permission
         if (!sender.hasPermission(Permission.GENERAL)) {
             sender.sendPermissionError()
             return false
         }
 
-        //  /randomtp
-        if (args.isEmpty()) {
-            //  get world
-            val world = sender.world
-            val worldName = world.name
-            //  does world include points
-            for (point in configuration.listOfPoint()) {
-                if(point.world.name == worldName){
+        when (args.getOrNull(0)) {
+            null -> {
+                val world = sender.world
+                val worldName = world.name
+                //  get point of sender's world
+                val point = configuration.points.values.firstOrNull { it.world.name == worldName }
+                return if (point != null) {
                     sender.sendMessagePrefix("§aテレポートします...")
                     sender.randomTeleport(point)
-                    return true
+                    true
+                } else {
+                    sender.sendMessagePrefix("§cこのワールドでは許可されていません。")
+                    false
                 }
             }
+            "help" -> {
+                sender.sendHelp()
+                return true
+            }
 
-            sender.sendMessagePrefix("§cこのワールドでは許可されていません。")
-            return false
-        }
+            "reload" -> {
+                if (!sender.hasPermission(Permission.ADMIN)) {
+                    sender.sendPermissionError()
+                    return false
+                }
+                plugin.reloadConfig()
+                configuration.loadConfig()
+                sender.sendMessagePrefix("§aコンフィグを再読み込みしました。")
+            }
 
-        //  /randomtp <...>
-        if (args.isNotEmpty()) {
-            when (args[0]) {
-                "help" -> {
-                    //  sendHelp
-                    sender.sendHelp()
-                    return true
+            "list" -> {
+                if (!sender.hasPermission(Permission.ADMIN)) {
+                    sender.sendPermissionError()
+                    return false
                 }
 
-                "reload" -> {
-                    if (!sender.hasPermission(Permission.ADMIN)) {
-                        sender.sendPermissionError()
-                        return false
-                    }
-                    //  reload
-                    plugin.reloadConfig()
-                    configuration.loadConfig()
-                    //  message
-                    sender.sendMessagePrefix("§aコンフィグを再読み込みしました。")
-                }
-
-                "list" -> {
-                    if (!sender.hasPermission(Permission.ADMIN)) {
-                        sender.sendPermissionError()
-                        return false
-                    }
-
-                    sender.sendMessage(
-                        """
-                        §e========================================
-                        §d登録済みテレポート先
+                sender.sendMessage(
+                    """
+                    §e========================================
+                    §d登録済みテレポート先
                     """.trimIndent()
-                    )
-                    val list = configuration.listOfPoint()
-                    list.forEach {
-                        sender.sendMessage("${it.name} -> ${it.world.name}")
-                    }
-                    sender.sendMessage("§e========================================")
+                )
+                configuration.points.forEach { (name, point) ->
+                    sender.sendMessage("$name -> ${point.world.name}")
                 }
+                sender.sendMessage("§e========================================")
             }
         }
         return false
     }
 
     private fun Player.sendHelp() {
-        val msg = """
+        sendMessage(
+            """
             §e========================================
             §6/randomtp <- ヘルプの表示
             §6/randomtp reload <- コンフィグのリロード
             §6/randomtp list <- 登録済みテレポート先を表示
             §dcreated by testusuke  
             §e========================================
-        """.trimIndent()
-        this.sendMessage(msg)
+            """.trimIndent()
+        )
     }
 
     private fun Player.sendPermissionError() {
-        this.sendMessage("${prefix}§cあなたに権限はありません")
+        sendMessagePrefix("§cあなたに権限はありません")
     }
 
     private fun Player.sendMessagePrefix(message: String) {
-        this.sendMessage("${prefix}${message}")
+        sendMessage("${prefix}$message")
     }
 }
