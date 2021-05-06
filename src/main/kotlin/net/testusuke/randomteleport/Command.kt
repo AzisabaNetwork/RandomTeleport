@@ -73,7 +73,8 @@ object Command : CommandExecutor {
         sendMessage(
             """
             §e========================================
-            §6/randomtp <- ヘルプの表示
+            §6/randomtp <- ランダムテレポート
+            §6/randomtp help <- ヘルプの表示
             §6/randomtp reload <- コンフィグのリロード
             §6/randomtp list <- 登録済みテレポート先を表示
             §dcreated by testusuke  
