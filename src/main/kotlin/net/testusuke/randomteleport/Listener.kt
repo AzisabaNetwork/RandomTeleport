@@ -118,6 +118,7 @@ object Listener : Listener {
 
         if (block.isUnSafety()) return false
         if (block.getRelative(0, 1, 0).isUnSafety()) return false
+        if (block.getRelative(0, 2, 0).isUnSafety()) return false
         if (!block.getRelative(0, -1, 0).type.isOccluding) return false
         return true
     }
