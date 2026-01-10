@@ -1,5 +1,6 @@
 package net.testusuke.randomteleport
 
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -22,6 +23,7 @@ class Main : JavaPlugin() {
         getCommand("randomtp")?.setExecutor(Command)
         saveDefaultConfig()
         configuration = Configuration()
+        Bukkit.getScheduler().runTask(this, Runnable { configuration.loadConfig() })
     }
 
     override fun onDisable() {

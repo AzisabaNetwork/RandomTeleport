@@ -4,6 +4,7 @@ import net.testusuke.randomteleport.Main.Companion.configuration
 import net.testusuke.randomteleport.Main.Companion.plugin
 import net.testusuke.randomteleport.Main.Companion.prefix
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.Sign
@@ -96,6 +97,9 @@ object Listener : Listener {
             }
             sendMessagePrefix("§a安全地域を見つけました!")
             plugin.runTaskSync {
+                if (configuration.forceSafety) {
+                    location.block.type = Material.STONE
+                }
                 teleport(location)
             }
         }
@@ -104,6 +108,7 @@ object Listener : Listener {
     private fun World.getRandomLocation(): Location? {
         val start = System.currentTimeMillis()
         var location = generateRandomLocation(this)
+        if (configuration.forceSafety) return location
         while (!location.isSafetyLocation()) {
             if (start + 3000 < System.currentTimeMillis()) {
                 return null

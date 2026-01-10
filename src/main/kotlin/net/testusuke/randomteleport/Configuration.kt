@@ -6,6 +6,7 @@ import org.bukkit.ChatColor
 class Configuration {
 
     private val _points = mutableMapOf<String, Point>()
+    var forceSafety = false
 
     init {
         plugin.logger.info("loading configuration...")
@@ -16,6 +17,7 @@ class Configuration {
         _points.clear()
 
         val config = plugin.config
+        forceSafety = config.getBoolean("forceSafety", false)
         val section = config.getConfigurationSection("point")
         if (section == null) {
             plugin.logger.warning("${ChatColor.RED}failed to load configuration!")
